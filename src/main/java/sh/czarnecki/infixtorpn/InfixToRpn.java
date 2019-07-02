@@ -5,10 +5,9 @@ import java.util.Stack;
 public class InfixToRpn {
 
     /**
-     * Transforms a term in infix notation to reverse polish notation
+     * Transforms a term in infix notation to reverse polish notation based
+     * on Edsger Dijkstras shunting-yard algorithm.
      *
-     * The String is transformed with the shunting-yard algorithm by Edsger
-     * Dijkstra.
      * If the given term is an invalid mathematical expression the result is
      * undefined.
      * Works only for the operands "+", "-", "*", "/" and with parenthesises.
@@ -106,7 +105,8 @@ public class InfixToRpn {
     }
 
     /**
-     * Checks if char is an operand or an opening parenthesis
+     * Checks if char is an operand or an opening parenthesis.
+     *
      * Checked operands are "+", "-", "/", and "*".
      * It is also checked for "("
      *
@@ -118,7 +118,8 @@ public class InfixToRpn {
     }
 
     /**
-     * Same as @{isAnyOperandOrOpenParen} but without check for opening parenthesis
+     * Checks if char is an operand
+     * @see #isAnyOperandOrOpenParen(char)
      *
      * @param c Char to be checked
      * @return Returns true if char is one of the checked operands else false
