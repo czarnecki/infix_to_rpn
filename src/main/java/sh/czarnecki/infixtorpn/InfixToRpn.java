@@ -18,7 +18,8 @@ public class InfixToRpn {
      * @param term Term in infix notation that is to be transformed
      * @return Returns a String in reverse polish notation
      */
-    public static String infToRpn(final String term) {
+    public static String infToRpn(String term) {
+        term = term.replaceAll("\\s", "");
         var operandStack = new Stack<Character>();
         var rpn = new StringBuilder();
         for (int index = 0; index < term.length(); index++) {

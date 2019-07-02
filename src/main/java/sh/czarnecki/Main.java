@@ -9,7 +9,6 @@ public class Main {
         System.out.print("Term: ");
         var scanner = new Scanner(System.in);
         var input = scanner.nextLine();
-        input = input.replaceAll("\\s", "");
         System.out.println(infToRpn(input));
     }
 }
