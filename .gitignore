@@ -24,3 +24,6 @@ hs_err_pid*
 /.directory
 /.project
 /.settings/*
+
+# intellij
+.idea/**
