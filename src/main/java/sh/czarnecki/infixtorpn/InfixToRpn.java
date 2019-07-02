@@ -5,7 +5,7 @@ import java.util.Stack;
 public class InfixToRpn {
 
     /**
-     * Transforms a String in infix notation to reverse polish notation
+     * Transforms a term in infix notation to reverse polish notation
      *
      * The String is transformed with the shunting-yard algorithm by Edsger
      * Dijkstra.
@@ -13,6 +13,7 @@ public class InfixToRpn {
      * undefined.
      * Works only for the operands "+", "-", "*", "/" and with parenthesises.
      * Parenthesises can be nested.
+     * The numbers may only be natural numbers including zero.
      *
      * @param term Term in infix notation that is to be transformed
      * @return Returns a String in reverse polish notation
