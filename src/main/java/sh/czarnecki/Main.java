@@ -1,4 +1,4 @@
-package sh.czarnecki.infixtorpn;
+package sh.czarnecki;
 
 import java.util.Scanner;
 
