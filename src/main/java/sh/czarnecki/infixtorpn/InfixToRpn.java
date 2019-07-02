@@ -4,76 +4,143 @@ import java.util.Stack;
 
 public class InfixToRpn {
 
-    private static Stack<Character> charStack = new Stack<>();
-
-    public static String infToRpn(String term) {
-        var upn = new StringBuilder();
+    /**
+     * Transforms a String in infix notation to reverse polish notation
+     *
+     * The String is transformed with the shunting-yard algorithm by Edsger
+     * Dijkstra.
+     * If the given term is an invalid mathematical expression the result is
+     * undefined.
+     * Works only for the operands "+", "-", "*", "/" and with parenthesises.
+     * Parenthesises can be nested.
+     *
+     * @param term Term in infix notation that is to be transformed
+     * @return Returns a String in reverse polish notation
+     */
+    public static String infToRpn(final String term) {
+        var operandStack = new Stack<Character>();
+        var rpn = new StringBuilder();
         for (int index = 0; index < term.length(); index++) {
-            getNextDigits(index, term, upn);
-            getNextOperandOrParen(index, term, upn);
-            closeParenthesis(index, term, upn);
+            addNextDigit(index, term, rpn);
+            getNextOperandOrParen(index, term, rpn, operandStack);
+            closeParenthesis(index, term, rpn, operandStack);
         }
-        clearRemainingStack(upn);
-        return upn.toString();
+        clearRemainingStack(rpn, operandStack);
+        return rpn.toString();
     }
 
-    private static void getNextDigits(int index, String term, StringBuilder upn) {
+    /**
+     * Adds the next digit to rpn
+     *
+     * @param index Current index
+     * @param term Term to be transformed
+     * @param rpn Term in reverse polish notation
+     */
+    private static void addNextDigit(int index, String term, StringBuilder rpn) {
         if (Character.isDigit(term.charAt(index))) {
             var prevIndex = index;
             while (index < term.length() && Character.isDigit(term.charAt(index))) {
                 index += 1;
             }
-            upn.append(term, prevIndex, index).append(" ");
+            rpn.append(term, prevIndex, index).append(" ");
         }
     }
 
-    private static void getNextOperandOrParen(int index, String term, StringBuilder upn) {
+    /**
+     * Add the next operand to the stack and append old to rpn if existent
+     *
+     * @param index Current index
+     * @param term Term to be transformed
+     * @param rpn Term in reverse polish notation
+     * @param operandStack Stack containing operands
+     */
+    private static void getNextOperandOrParen(final int index, String term, StringBuilder rpn, Stack<Character> operandStack) {
         if (index < term.length() && isAnyOperandOrOpenParen(term.charAt(index))) {
             if (isPlusOrMinus(term.charAt(index))) {
-                if (!charStack.empty() && isAnyOperand(charStack.peek())) {
-                    upn.append(charStack.pop()).append(" ");
+                if (!operandStack.empty() && isAnyOperand(operandStack.peek())) {
+                    rpn.append(operandStack.pop()).append(" ");
                 }
             }
             if (isMulOrDiv(term.charAt(index))) {
-                if (!charStack.empty() && isMulOrDiv(charStack.peek())) {
-                    upn.append(charStack.pop()).append(" ");
+                if (!operandStack.empty() && isMulOrDiv(operandStack.peek())) {
+                    rpn.append(operandStack.pop()).append(" ");
                 }
             }
-            charStack.push(term.charAt(index));
+            operandStack.push(term.charAt(index));
         }
     }
 
-    private static void closeParenthesis(int index, String term, StringBuilder upn) {
+    /**
+     * Closes current parenthesis and starts next if nested
+     *
+     * @param index Current index
+     * @param term Term to be transformed
+     * @param rpn Term in reverse polish notation
+     * @param operandStack Stack containing operands
+     */
+    private static void closeParenthesis(final int index, String term, StringBuilder rpn, Stack<Character> operandStack) {
         if (index < term.length() && term.charAt(index) == ')') {
-            while (!charStack.empty()) {
-                if (charStack.peek() == '(') {
-                    charStack.pop();
+            while (!operandStack.empty()) {
+                if (operandStack.peek() == '(') {
+                    operandStack.pop();
                     break;
                 } else {
-                    upn.append(charStack.pop()).append(" ");
+                    rpn.append(operandStack.pop()).append(" ");
                 }
             }
         }
     }
 
-    private static void clearRemainingStack(StringBuilder upn) {
-        while (!charStack.empty()) {
-            upn.append(charStack.pop()).append(" ");
+    /**
+     * Finishes transformation up by appending remaining operands
+     *
+     * @param rpn Term in reverse polish notation
+     * @param operandStack Stack containing operands
+     */
+    private static void clearRemainingStack(StringBuilder rpn, Stack<Character> operandStack) {
+        while (!operandStack.empty()) {
+            rpn.append(operandStack.pop()).append(" ");
         }
     }
 
+    /**
+     * Checks if char is an operand or an opening parenthesis
+     * Checked operands are "+", "-", "/", and "*".
+     * It is also checked for "("
+     *
+     * @param c char to be checked
+     * @return Returns true if char is one of the checked operands else false
+     */
     private static boolean isAnyOperandOrOpenParen(char c) {
         return "+-/*(".contains(Character.toString(c));
     }
 
+    /**
+     * Same as @{isAnyOperandOrOpenParen} but without check for opening parenthesis
+     *
+     * @param c Char to be checked
+     * @return Returns true if char is one of the checked operands else false
+     */
     private static boolean isAnyOperand(char c) {
         return "*/+-".contains(Character.toString(c));
     }
 
+    /**
+     * Checks if char is a "*" or "/"
+     *
+     * @param c Char to be checked
+     * @return Returns true of char is "*" or "/" else false
+     */
     private static boolean isMulOrDiv(char c) {
         return "*/".contains(Character.toString(c));
     }
 
+    /**
+     * Checks if char is a "+" or "-"
+     *
+     * @param c Char to be checked
+     * @return Returns true of char is "+" or "-" else false
+     */
     private static boolean isPlusOrMinus(char c) {
         return "+-".contains(Character.toString(c));
     }
